@@ -12,7 +12,7 @@ import com.rajeshkawali.repository.JWTRepository;
 import java.util.ArrayList;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserService implements UserDetailsService {
 	
 	@Autowired
 	private JWTRepository repository;

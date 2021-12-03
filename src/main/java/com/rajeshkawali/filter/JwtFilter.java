@@ -1,5 +1,12 @@
 package com.rajeshkawali.filter;
 
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,14 +15,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.rajeshkawali.service.CustomUserDetailsService;
+import com.rajeshkawali.service.CustomUserService;
 import com.rajeshkawali.util.JwtUtil;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -24,7 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
 	private JwtUtil jwtUtil;
 	
 	@Autowired
-	private CustomUserDetailsService service;
+	private CustomUserService UserService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -38,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = service.loadUserByUsername(userName);
+			UserDetails userDetails = UserService.loadUserByUsername(userName);
 			if (jwtUtil.validateToken(token, userDetails)) {
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
